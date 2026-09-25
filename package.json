@@ -1,0 +1,14 @@
+{
+  "name": "voltaris-products",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev:command": "pnpm --filter @voltaris/command dev",
+    "dev:margin": "pnpm --filter @voltaris/margin dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:migrate": "pnpm --filter @voltaris/core db:migrate",
+    "db:seed": "pnpm --filter @voltaris/core db:seed"
+  }
+}
