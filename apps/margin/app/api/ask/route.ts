@@ -31,6 +31,6 @@ export async function POST(request: NextRequest) {
       { label: "Actual direct cost", value: new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format(result.metrics.actualCostCents / 100) },
       { label: "Actual service margin", value: new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format(result.metrics.marginCents / 100) },
     ];
-    return NextResponse.json({ question, analysis, answer: result.explanation, evidence, caveat: result.limitations.join(" "), sourceEventIds: result.evidence.map(e => e.id), generatedBy: "ai_grounded" });
+    return NextResponse.json({ question, analysis, answer: result.explanation, evidence, caveat: result.limitations.join(" "), sourceEventIds: result.evidence.map(e => e.id), generatedBy: result.generatedBy });
   } catch (error) { return failed(error); }
 }

@@ -202,6 +202,7 @@ export type MarginAnalysisKind =
 
 export interface MarginAnalysis {
   analysis: MarginAnalysisKind;
+  generatedBy: "ai_grounded" | "computed";
   region: string | null;
   quarter: Quarter;
   headline: string;

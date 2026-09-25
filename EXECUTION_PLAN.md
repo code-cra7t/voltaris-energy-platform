@@ -47,7 +47,7 @@ Both products share one PostgreSQL data model. An approved Command work order up
 
 ## Dependencies and current status
 
-- Gemini AI Studio: existing API key visible in the signed-in account; key not yet configured in this workspace.
-- Neon: separate Voltaris Energy project created in Frankfurt; schema and fictional records loaded.
-- GitHub and Vercel: signed-in browser sessions available; CLI authorization not yet configured.
+- Gemini AI Studio: server-side API key configured locally and in both Vercel projects; the shared adapter retries a supported fallback model when the primary model is overloaded.
+- Neon: separate Voltaris Energy project created in Frankfurt; schema and fictional records loaded. Both deployed apps read the same database.
+- GitHub and Vercel: source published at https://github.com/code-cra7t/voltaris-energy-platform; both apps deployed from branch `tori` to the production URLs in `README.md`.
 - Gmail and Google Calendar: connected to Codex, but not automatically authorized for the deployed products. The first release uses an internal schedule and in-app confirmation.

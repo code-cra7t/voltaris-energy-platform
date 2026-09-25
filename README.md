@@ -2,6 +2,15 @@
 
 Two connected operations products for a fictional European energy-services company. The company, sites, assets, people, and financial records are synthetic. The incident workflow, approvals, database writes, calculations, audit history, and AI calls run against real services.
 
+## Live products
+
+| Product | Production URL |
+| --- | --- |
+| **Command** | https://voltaris-energy-platform-command.vercel.app/ |
+| **Margin** | https://voltaris-energy-platform-margin.vercel.app/ |
+
+Both apps require the same Voltaris staff login. The initial administrator credentials are stored in the local, ignored `.env.local` file created for this deployment; they are deliberately absent from the repository. For a reviewer, create a separate account or share credentials through a secure channel. Start in Command with the Hannover charger incident, then open Margin's service backlog to see its approved €140 forecast cost.
+
 ## Products
 
 | Product | User outcome | Main engineering work |

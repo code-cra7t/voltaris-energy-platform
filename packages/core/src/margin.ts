@@ -378,29 +378,45 @@ export async function getMarginAnalysis(input: {
       workOrderIds: backlog.items.slice(0, 12).map((item) => item.workOrder.id),
     },
   };
-  const narrative = await geminiJson<{ explanation?: unknown; limitations?: unknown }>(
-    `Explain the requested ${input.analysis} analysis using only the computed JSON below. ` +
-    `Do not invent facts, figures, causes, or source references. Do not include numerical values, ` +
-    `currency symbols, or percentages in your prose; the application displays verified numbers separately. ` +
-    `Clearly describe that backlog values are forecasts rather than actual margin. ` +
-    `Return JSON with explanation (one or two concise sentences) and limitations (array of short strings).\n` +
-    JSON.stringify(computed),
-  );
+  let narrative: { explanation?: unknown; limitations?: unknown } | null = null;
+  try {
+    narrative = await geminiJson<{ explanation?: unknown; limitations?: unknown }>(
+      `Explain the requested ${input.analysis} analysis using only the computed JSON below. ` +
+      `Do not invent facts, figures, causes, or source references. Do not include numerical values, ` +
+      `currency symbols, or percentages in your prose; the application displays verified numbers separately. ` +
+      `Clearly describe that backlog values are forecasts rather than actual margin. ` +
+      `Return JSON with explanation (one or two concise sentences) and limitations (array of short strings).\n` +
+      JSON.stringify(computed),
+    );
+  } catch (error) {
+    console.warn("Margin AI unavailable; returning computed explanation", error);
+  }
   const validText = (value: unknown): value is string =>
     typeof value === "string" && value.length > 0 && !/[0-9€$£%]/.test(value);
-  if (!validText(narrative.explanation) ||
-      !Array.isArray(narrative.limitations) ||
-      !narrative.limitations.every(validText)) {
-    throw new Error("Gemini returned unsupported margin explanation");
-  }
+  const aiExplanation = narrative && validText(narrative.explanation) ? narrative.explanation : null;
+  const aiLimitations = narrative && Array.isArray(narrative.limitations) &&
+    narrative.limitations.every(validText) ? narrative.limitations as string[] : null;
+  const grounded = aiExplanation !== null && aiLimitations !== null;
+  const change = dashboard.current.marginCents - dashboard.prior.marginCents;
+  const revenueChange = dashboard.current.recognizedRevenueCents - dashboard.prior.recognizedRevenueCents;
+  const costChange = dashboard.current.actualCostCents - dashboard.prior.actualCostCents;
+  const topCostDriver = dashboard.drivers.find((driver) => driver.kind === "cost" && driver.deltaCents !== 0);
+  const computedExplanation = input.analysis === "backlog"
+    ? "Approved open work orders contribute forecast cost to the service backlog. They do not change actual service margin until costs are posted."
+    : input.analysis === "revenue_drivers"
+      ? `Recognized revenue ${revenueChange === 0 ? "was unchanged" : revenueChange > 0 ? "increased" : "decreased"} versus the prior quarter. The figures come from posted revenue events.`
+      : input.analysis === "cost_drivers"
+        ? `Actual direct cost ${costChange === 0 ? "was unchanged" : costChange > 0 ? "increased" : "decreased"} versus the prior quarter. ${topCostDriver ? `The largest posted cost category movement is ${topCostDriver.category}.` : "No cost category movement was recorded."}`
+        : `Service margin ${change === 0 ? "was unchanged" : change > 0 ? "increased" : "decreased"} versus the prior quarter. Recognized revenue ${revenueChange === 0 ? "was unchanged" : revenueChange > 0 ? "rose" : "fell"}, while actual direct cost ${costChange === 0 ? "was unchanged" : costChange > 0 ? "rose" : "fell"}.`;
   return {
     analysis: input.analysis,
+    generatedBy: grounded ? "ai_grounded" : "computed",
     region: dashboard.region,
     quarter: dashboard.quarter,
     headline,
-    explanation: narrative.explanation,
+    explanation: grounded ? aiExplanation : computedExplanation,
     limitations: [
-      ...narrative.limitations,
+      ...(grounded ? aiLimitations : ["AI wording was unavailable or failed the evidence check; this explanation was computed from posted records."]),
       "Actual margin includes posted recognized revenue and actual cost events only.",
       "Open work order values are forecasts and may differ from final posted amounts.",
     ],
