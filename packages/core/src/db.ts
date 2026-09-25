@@ -9,7 +9,13 @@ export function getPool(): pg.Pool {
     if (!connectionString) {
       throw new Error("DATABASE_URL is not configured");
     }
-    pool = new Pool({ connectionString, max: 8, connectionTimeoutMillis: 8_000 });
+    // Keep the current certificate and host verification semantics when pg
+    // adopts standard libpq meanings for sslmode=require in a future major version.
+    const databaseUrl = new URL(connectionString);
+    if (["prefer", "require", "verify-ca"].includes(databaseUrl.searchParams.get("sslmode") ?? "")) {
+      databaseUrl.searchParams.set("sslmode", "verify-full");
+    }
+    pool = new Pool({ connectionString: databaseUrl.toString(), max: 8, connectionTimeoutMillis: 8_000 });
   }
   return pool;
 }

@@ -25,6 +25,6 @@ Open [Command](https://voltaris-energy-platform-command.vercel.app/) and [Margin
 - [x] Margin backlog shows the approved order while actual margin stays fixed on the deployed URL.
 - [x] Completion removes the order from open backlog and posts actual cost (verified by integration smoke test).
 - [x] Margin's regional metrics reconcile to posted records (verified by SQL/service tests and deployed dashboard).
-- [ ] AI margin answer stays grounded in calculated metrics and links to source records.
+- [x] AI margin answer stays grounded in calculated metrics and links to source records on the deployed URL; unsupported model wording yields a labeled computed explanation.
 - [x] Both products render at desktop and mobile width with working controls and error states (checked locally).
 - [x] No environment files, credentials, or real customer data are in the repository.

@@ -22,6 +22,8 @@ Margin reads posted financial events from PostgreSQL. For a selected region and 
 
 The question interface maps a business question to one of four approved analyses: margin change, revenue drivers, cost drivers, or backlog. It sends computed JSON to Gemini for explanation. The model receives no database credentials and cannot generate executable SQL. Its prose is constrained to avoid unsupported figures; the interface supplies verified numbers and source records separately.
 
+If the AI service is unavailable or returns wording that fails validation, Margin serves a plainly labeled explanation derived from the posted metrics. The user still gets the financial evidence without mistaking a fallback for AI output.
+
 Open Command work orders populate the backlog with forecast costs. This forecast never changes actual service margin. Only completion and a posted actual-cost event change the margin calculation.
 
 ## Technical choices
