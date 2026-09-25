@@ -11,6 +11,12 @@ Two connected operations products for a fictional European energy-services compa
 
 Both apps require the same Voltaris staff login. The initial administrator credentials are stored in the local, ignored `.env.local` file created for this deployment; they are deliberately absent from the repository. For a reviewer, create a separate account or share credentials through a secure channel. Start in Command with the Hannover charger incident, then open Margin's service backlog to see its approved €140 forecast cost.
 
+[Watch the 90-second captioned product walkthrough](docs/voltaris-walkthrough.mp4) · [Read the case study](docs/CASE_STUDY.md)
+
+| Command incident workflow | Margin financial intelligence |
+| --- | --- |
+| ![Command incident and operations queue](docs/media/01-command-incident.jpg) | ![Margin dashboard with posted financial metrics](docs/media/04-margin-overview.jpg) |
+
 ## Products
 
 | Product | User outcome | Main engineering work |

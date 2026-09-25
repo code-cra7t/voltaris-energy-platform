@@ -36,7 +36,7 @@ Open Command work orders populate the backlog with forecast costs. This forecast
 
 ## Verified scenario
 
-The live integration smoke test created an incident, returned citations from stored evidence, proposed an available technician without booking, approved the proposal, observed the new order in Margin backlog, confirmed actual margin was unchanged by the forecast, completed the order, and observed actual direct cost rise by the posted amount. Both app production builds and browser login/dashboard checks passed locally.
+The integration smoke test created an incident, returned citations from stored evidence, proposed an available technician without booking, approved the proposal, observed the new order in Margin backlog, confirmed actual margin was unchanged by the forecast, completed the order, and observed actual direct cost rise by the posted amount. On both deployed URLs, browser checks confirmed staff sign-in, the approved work order, the matching forecast backlog, posted margin metrics, an AI explanation, and source-record drilldown.
 
 ## Production extension
 

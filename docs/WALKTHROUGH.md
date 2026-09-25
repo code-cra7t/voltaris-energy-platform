@@ -1,5 +1,7 @@
 # Voltaris walkthrough and release checks
 
+The [90-second captioned walkthrough](voltaris-walkthrough.mp4) uses screenshots captured from the deployed products. For an interactive walkthrough, follow the sequence below with a Voltaris staff login.
+
 ## 90-second walkthrough script
 
 Open [Command](https://voltaris-energy-platform-command.vercel.app/) and [Margin](https://voltaris-energy-platform-margin.vercel.app/) in separate tabs. Both require the Voltaris staff login. For a clean approval sequence, report a new fictional incident: the seeded Hannover incident has already been approved and is useful for showing the connected backlog.
