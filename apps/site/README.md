@@ -1,6 +1,6 @@
 # Voltaris public site
 
-The public front door for Voltaris Energy. It tells the complete operational journey and links to the existing Command and Margin products without sharing their credentials or changing their code.
+The [live public front door](https://voltaris-energy-platform-site.vercel.app/) for Voltaris Energy. It tells the complete operational journey and links to the existing Command and Margin products without sharing their credentials or changing their code.
 
 ## Local run
 
@@ -19,4 +19,4 @@ The homepage network is explicitly simulated. The video, stills, and fictional c
 
 ## Deploy
 
-Create a new Vercel project from this monorepo with **Root Directory** `apps/site`, **Framework** Next.js, and no environment variables. Existing Command and Margin project settings should remain as they are. After deployment, update `metadataBase` in `app/layout.tsx` and the README live-sites table if the final URL differs from the expected Vercel address.
+The Vercel project is `voltaris-energy-platform-site`, connected to the `tori` branch with **Root Directory** `apps/site`, **Framework** Next.js, and no environment variables. Its production URL matches the metadata, sitemap, and robots defaults. Command and Margin remain separate projects.

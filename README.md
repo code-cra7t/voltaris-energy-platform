@@ -6,7 +6,7 @@ A public product website and two connected operations products for a fictional E
 
 | Product | Production URL |
 | --- | --- |
-| **Public site** | Deployment pending |
+| **Public site** | https://voltaris-energy-platform-site.vercel.app/ |
 | **Command** | https://voltaris-energy-platform-command.vercel.app/ |
 | **Margin** | https://voltaris-energy-platform-margin.vercel.app/ |
 

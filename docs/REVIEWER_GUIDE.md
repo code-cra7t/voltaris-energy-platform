@@ -1,6 +1,6 @@
 # Voltaris Energy: reviewer and operator guide
 
-Voltaris Energy is a fictional European energy-services company. Command and Margin are two connected working products built around synthetic sites, chargers, people, contracts, and financial records. Sign-in, AI calls, database writes, approvals, audit entries, scheduling, and financial calculations are real. Neither product controls a physical charger or connects to a real customer system.
+Voltaris Energy is a fictional European energy-services company. Start at the [public Voltaris site](https://voltaris-energy-platform-site.vercel.app/) to follow the company, product, and incident story, then enter the private reviewer workspace. Command and Margin are two connected working products built around synthetic sites, chargers, people, contracts, and financial records. Sign-in, AI calls, database writes, approvals, audit entries, scheduling, and financial calculations are real. Neither product controls a physical charger or connects to a real customer system.
 
 ## For a reviewer: one shift, two products
 
