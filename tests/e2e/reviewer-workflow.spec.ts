@@ -52,7 +52,7 @@ test("reviewer completes a real Command to Margin shift and resets it", async ({
   expect(after.body.openCount).toBe(2);
   await marginPage.getByRole("button", { name: "View Hannover backlog" }).click();
   await expect(marginPage.getByRole("heading", { name: "Service backlog" })).toBeVisible();
-  await expect(marginPage.getByText("Open work orders")).toBeVisible();
+  await expect(marginPage.getByText("Open work orders", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Restore shift state" }).click();
   await expect(page.getByText(/Shift workspace restored/i)).toBeVisible();
   const restored = await backlog();
