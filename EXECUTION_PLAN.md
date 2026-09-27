@@ -58,8 +58,8 @@ The public `code-cra7t/voltaris-energy-platform` repository on branch `tori` con
 
 | Task | Acceptance criterion | Status |
 | --- | --- | --- |
-| Citation recovery | Unsupported AI claims are discarded; Command saves a clearly labeled, cited, conservative source review so the workflow continues. | Implemented locally; production QA pending |
-| Reviewer access | A dedicated non-admin account can read both products, while Command mutation APIs reject it; credentials stay out of Git. | Account created; production QA pending |
-| Employer walkthrough QA | Execute the documented 90-second story on both production URLs, check approval and Margin propagation, and record findings. | Pending |
+| Citation recovery | Unsupported AI claims are discarded; Command saves a clearly labeled, cited, conservative source review so the workflow continues. | Released on `579cea0`; fallback unit tests pass |
+| Reviewer access | A dedicated non-admin account can read both products, while Command mutation APIs reject it; credentials stay out of Git. | Verified: both logins and reads HTTP 200; Command analyze HTTP 403 |
+| Employer walkthrough QA | Execute the documented 90-second story on both production URLs, check approval and Margin propagation, and record findings. | Passed; see `docs/RELEASE_QA_2026-09-27.md` |
 
 Do not add product features during this pass. A fictional company and synthetic records remain explicitly labeled in the product and portfolio material.

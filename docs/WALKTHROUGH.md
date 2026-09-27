@@ -23,14 +23,15 @@ Open [Command](https://voltaris-energy-platform-command.vercel.app/) and [Margin
 ## Release checks
 
 - [x] Command login works on the deployed URL.
-- [x] A newly reported incident appears after refresh (verified in the local app against the shared Neon database).
-- [x] AI finding contains valid clickable evidence citations (verified in the local app; persisted finding shown on deployment).
-- [x] Proposal shows a qualified slot and clearly states SLA feasibility or risk (persisted proposal shown on deployment).
-- [x] No work order or booking exists before staff approval (verified by integration smoke test).
-- [x] Approval creates one work order and a traceable audit entry (verified by integration smoke test and deployed readback).
+- [x] A newly reported incident appears in the deployed Command API (27 September production walkthrough).
+- [x] AI finding contains valid evidence citations (eight distinct source IDs in the 27 September production walkthrough); invalid citations trigger a labeled conservative source review, covered by tests.
+- [x] Proposal shows a qualified technician, appointment, forecast cost, and SLA feasibility or risk (27 September production walkthrough).
+- [x] No work order or booking exists before staff approval (27 September production walkthrough).
+- [x] Approval creates one work order and a traceable audit entry (27 September production walkthrough).
 - [x] Margin backlog shows the approved order while actual margin stays fixed on the deployed URL.
 - [x] Completion removes the order from open backlog and posts actual cost (verified by integration smoke test).
 - [x] Margin's regional metrics reconcile to posted records (verified by SQL/service tests and deployed dashboard).
 - [x] AI margin answer stays grounded in calculated metrics and links to source records on the deployed URL; unsupported model wording yields a labeled computed explanation.
 - [x] Both products render at desktop and mobile width with working controls and error states (checked locally).
 - [x] No environment files, credentials, or real customer data are in the repository.
+- [x] Reviewer account reads both production apps, while Command rejects its analysis request with HTTP 403.
