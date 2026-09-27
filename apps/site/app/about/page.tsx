@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return <>
-    <PageHero number="06" eyebrow="ABOUT VOLTARIS" title="A fictional company." accent="Real working software" description="Voltaris is an energy-services setting built to make a complex operational workflow tangible. The business records are synthetic. The products and their safeguards can be explored live."><Link href="/reviewer" className="button button-light">Enter the workspace <ArrowUpRight size={18}/></Link></PageHero>
+    <PageHero number="06" eyebrow="ABOUT VOLTARIS" title="A fictional company." accent="Real working software" description="Voltaris is an energy-services setting built to make a complex operational workflow tangible. The business records are synthetic. The products and their safeguards can be explored live." image="/media/operations-room.webp" visual={<div className="hero-about-card"><span>WHAT VOLTARIS IS</span><strong>A credible operating environment for working AI products.</strong><div><span>01</span><p>Fictional sites, people, contracts, and records</p></div><div><span>02</span><p>Real application workflows and database writes</p></div><div><span>03</span><p>Private, resettable reviewer workspaces</p></div></div>}><Link href="/reviewer" className="button button-light">Enter the workspace <ArrowUpRight size={18}/></Link></PageHero>
 
     <section className="about-image-section"><div className="about-image" role="img" aria-label="Illustrative electric charging site in a European mountain valley at dusk"/><div className="about-image-caption">ILLUSTRATIVE ENERGY-SERVICE SETTING · GENERATED IMAGE · NOT A VOLTARIS FACILITY</div></section>
 

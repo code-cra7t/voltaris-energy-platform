@@ -16,7 +16,7 @@ At the repository root, run `pnpm install` then `pnpm dev:site`. Open `http://lo
 - `/about` — fictional company context, working software scope, and image disclosure.
 - `/reviewer` — clear sign-in and shift instructions with direct live product links.
 
-The homepage network is explicitly simulated. The site uses original AI-generated illustrative EV infrastructure images, real captures from the working products, and an existing captioned product walkthrough. Image and fictional company disclosures are visible in the experience. No staff login is published on the site.
+The homepage network is explicitly simulated. The full page set uses original AI-generated illustrative EV infrastructure and operations imagery, with real captures from the working products and an existing captioned product walkthrough. The Command-to-Margin handoff animates a work order into a forecast record; reduced-motion users see the same information without the transfer animation. Image and fictional company disclosures are visible in the experience. No staff login is published on the site.
 
 ## Deploy
 
