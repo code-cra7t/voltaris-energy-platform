@@ -1,15 +1,16 @@
-# Voltaris Energy — Command + Margin
+# Voltaris Energy — Site + Command + Margin
 
-Two connected operations products for a fictional European energy-services company. The company, sites, assets, people, and financial records are synthetic. The incident workflow, approvals, database writes, calculations, audit history, and AI calls run against real services.
+A public product website and two connected operations products for a fictional European energy-services company. The company, sites, assets, people, and financial records are synthetic. The incident workflow, approvals, database writes, calculations, audit history, and AI calls run against real services.
 
 ## Live products
 
 | Product | Production URL |
 | --- | --- |
+| **Public site** | Deployment pending |
 | **Command** | https://voltaris-energy-platform-command.vercel.app/ |
 | **Margin** | https://voltaris-energy-platform-margin.vercel.app/ |
 
-Both apps accept the same Voltaris staff credentials; each address has its own sign-in. Invited reviewers receive a private, writable workspace with an incoming fault, an already approved work order, and an explicit reset. Credentials are shared privately and never stored in the repository. Start with [the reviewer guide](docs/REVIEWER_GUIDE.md).
+Command and Margin accept the same Voltaris staff credentials; each address has its own sign-in. Invited reviewers receive a private, writable workspace with an incoming fault, an already approved work order, and an explicit reset. Credentials are shared privately and never stored in the repository. Start with [the public website](apps/site/README.md) or [the reviewer guide](docs/REVIEWER_GUIDE.md).
 
 [Watch the 90-second captioned product walkthrough](docs/voltaris-walkthrough.mp4) · [Read the case study](docs/CASE_STUDY.md)
 
@@ -63,9 +64,9 @@ Requires Node.js 22+, pnpm, a PostgreSQL database, and a Gemini API key.
 2. Copy `.env.example` to `.env.local` and fill `DATABASE_URL`, `GEMINI_API_KEY`, `SESSION_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. Copy the same server-side values to `apps/command/.env.local` and `apps/margin/.env.local` for local Next.js runs.
 3. `pnpm db:migrate`
 4. `pnpm db:seed`
-5. In separate terminals: `pnpm dev:command` and `pnpm dev:margin`.
+5. In separate terminals: `pnpm dev:command`, `pnpm dev:margin`, and `pnpm dev:site`.
 
-Command runs on port 3000; Margin runs on port 3001. The first admin is created by the seed script. Use fictional data only. Running the seed repeatedly may add time-relative availability slots; it does not replace existing staff passwords.
+Command runs on port 3000; Margin runs on port 3001; the public site runs on port 3002 and does not need database secrets. The first admin is created by the seed script. Use fictional data only. Running the seed repeatedly may add time-relative availability slots; it does not replace existing staff passwords.
 
 ## Verification
 

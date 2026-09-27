@@ -5,6 +5,7 @@
   "scripts": {
     "dev:command": "pnpm --filter @voltaris/command dev",
     "dev:margin": "pnpm --filter @voltaris/margin dev",
+    "dev:site": "pnpm --filter @voltaris/site dev",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
