@@ -58,6 +58,7 @@ export interface IncidentFinding {
   urgency: "routine" | "priority" | "urgent";
   limitations: string[];
   evidenceIds: string[];
+  claims?: Array<{ kind: "cause" | "check"; text: string; evidenceIds: string[] }>;
   generatedAt: IsoDateTime;
   generationMode?: "ai_grounded" | "source_review";
 }
@@ -130,6 +131,7 @@ export interface StaffUser {
   email: string;
   displayName: string;
   role: "admin" | "dispatcher" | "manager";
+  workspaceSchema: string;
 }
 
 export interface MetricTotals {

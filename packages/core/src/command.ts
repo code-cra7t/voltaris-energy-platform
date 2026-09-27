@@ -1,5 +1,6 @@
 import { geminiJson } from "./gemini.js";
-import { buildIncidentFinding } from "./command-finding.js";
+import { buildIncidentFinding, INCIDENT_FINDING_SCHEMA } from "./command-finding.js";
+import { workspaceContext } from "./db.js";
 import { query, transaction } from "./db.js";
 import type {
   AgentAction,
@@ -292,20 +293,26 @@ export async function analyzeIncident(id: string, actor: string): Promise<Incide
     `[${item.id}] ${item.title} (${item.sourceType}): ${item.excerpt}`,
   ).join("\n");
   let result: Partial<IncidentFinding> | null = null;
+  let providerFailed = false;
   try {
     result = await geminiJson<Partial<IncidentFinding>>(`
-You are an EV charging maintenance operations assistant. Do not claim a definitive electrical diagnosis or recommend unsafe physical intervention. Use only the supplied evidence. Return JSON with keys overview (string), likelyCauses (array of short strings), recommendedChecks (array of safe checks for a trained technician), urgency (routine|priority|urgent), limitations (array of strings), evidenceIds (array of exact IDs cited below). If evidence is insufficient, say so. Do not invent IDs.
+You are an EV charging maintenance operations assistant. Do not claim a definitive electrical diagnosis or recommend unsafe physical intervention. Use only the supplied evidence. Return JSON with overview, urgency, limitations, and claims. Each claim has kind (cause or check), text, and its own array of exact evidenceIds. Every cause and check must have at least one source ID supporting that specific statement. If evidence is insufficient, return an empty claims array. Do not invent IDs.
 
 Incident: ${incident.description}
 Asset: ${incident.asset.assetCode}, ${incident.asset.manufacturer} ${incident.asset.model}, status ${incident.asset.status}
 Site: ${incident.siteName}, ${incident.region}
 Contract: ${incident.contract ? `${incident.contract.serviceLevel}, ${incident.contract.responseHours} hour response target` : "none recorded"}
 Evidence:\n${evidenceList}
-  `.trim());
+  `.trim(), INCIDENT_FINDING_SCHEMA);
   } catch (error) {
-    console.warn("Command AI assessment unavailable; using cited source review", error);
+    providerFailed = true;
+    console.warn(JSON.stringify({ event: "ai.fallback", reason: "provider_unavailable", traceId: workspaceContext()?.traceId,
+      workspace: workspaceContext()?.schema, errorType: error instanceof Error ? error.name : "UnknownError" }));
   }
   const finding = buildIncidentFinding(result, incident.evidence);
+  if (finding.generationMode === "source_review" && !providerFailed) console.warn(JSON.stringify({
+    event: "ai.fallback", reason: Array.isArray(result?.claims) && result.claims.length ? "citation_rejected" : "insufficient_evidence",
+    traceId: workspaceContext()?.traceId, workspace: workspaceContext()?.schema }));
   await transaction(async (client) => {
     await client.query(
       "UPDATE incidents SET finding=$2::jsonb,status='analyzed',updated_at=now() WHERE id=$1",

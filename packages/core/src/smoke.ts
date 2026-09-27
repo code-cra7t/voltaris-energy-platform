@@ -13,13 +13,14 @@ import {
   listAssets,
   proposeDispatch,
 } from "./index.js";
-import { getPool } from "./db.js";
+import { withWorkspace, closePools } from "./db.js";
 
 config({ path: resolve(process.cwd(), "../../.env.local") });
 
 try {
   const user = await authenticateStaff(process.env.ADMIN_EMAIL || "", process.env.ADMIN_PASSWORD || "");
   assert(user, "Admin authentication failed");
+  await withWorkspace(user.workspaceSchema, user.id, "smoke-test", async () => {
   const assets = await listAssets();
   assert(assets.length > 0, "No assets loaded");
   const baselineBacklog = await getBacklog({ region: assets[0]!.site.region });
@@ -61,6 +62,7 @@ try {
   const persisted = await getIncidentDetail(created.id);
   assert(persisted?.actions.some((action) => action.action === "dispatch_approved"), "Approval audit missing");
   process.stdout.write(`PASS: incident ${created.id}; citations, approval gate, backlog, actual margin, audit\n`);
+  });
 } finally {
-  await getPool().end();
+  await closePools();
 }

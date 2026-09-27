@@ -65,10 +65,12 @@ export function presentDetail(incident: CoreIncidentDetail): IncidentDetail {
     citations,
     analysis: incident.finding ? {
       summary: incident.finding.overview,
-      findings: [
-        { title: "Plausible causes", explanation: incident.finding.likelyCauses.join(" · ") || "The evidence does not support a specific cause yet.", citationIds: incident.finding.evidenceIds },
-        { title: "Recommended checks", explanation: incident.finding.recommendedChecks.join(" · ") || "A qualified technician should assess the charger on site.", citationIds: incident.finding.evidenceIds },
-      ],
+      findings: incident.finding.claims?.length
+        ? incident.finding.claims.map(claim => ({ title: claim.kind === "cause" ? "Plausible cause" : "Recommended check",
+          explanation: claim.text, citationIds: claim.evidenceIds }))
+        : incident.finding.generationMode === "source_review"
+          ? [{ title: "Cause not established", explanation: "A qualified technician should assess the charger using the records below.", citationIds: [], confidence: "Uncertain" }]
+          : [{ title: "Earlier assessment", explanation: "This finding was saved before claim-level citations were introduced. Review the source set before relying on it.", citationIds: incident.finding.evidenceIds }],
       safetyNote: incident.finding.limitations.length ? incident.finding.limitations.join(" ") : "Advisory assessment only. A qualified technician must verify the fault before any physical work.",
       generatedAt: incident.finding.generatedAt,
       model: incident.finding.generationMode === "source_review" ? "Conservative source review" : "Gemini assessment",

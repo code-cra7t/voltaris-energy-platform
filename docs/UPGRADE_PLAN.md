@@ -4,13 +4,13 @@
 
 Make Voltaris useful to an employer who opens it independently. A reviewer should be able to complete a real incident-to-financial-impact workflow in a safe workspace, then inspect the engineering evidence behind it. Voltaris remains a fictional company with synthetic records; the AI calls, database writes, approvals, audit trail, and financial calculations remain live.
 
-The current portfolio release is complete. The items below are proposed upgrades, not features already delivered.
+The four upgrades below have been implemented. The release gate runs on pull requests and `tori` pushes; the invited workspace and both apps are verified separately during deployment. See the [reviewer and operator guide](REVIEWER_GUIDE.md) for the live path and operational details.
 
 ## Product experience first
 
 The highest-priority upgrade is a **self-service product sandbox**. It should feel like the normal Command and Margin products: a reviewer reports a fault, examines retrieved evidence, requests a dispatch proposal, makes a human approval decision, and sees the resulting work order and forecast backlog in Margin. The reviewer's changes must persist through refreshes for that session. The existing read-only reviewer login can remain available for safe inspection of the main showcase data.
 
-| Order | Upgrade | Work | Exit gate |
+| Order | Upgrade | Delivered work | Exit gate |
 | --- | --- | --- | --- |
 | 1 | Writable reviewer sandbox | Provide an invited reviewer with an isolated, seeded workspace and a short in-product starting path. Include at least a fresh fault, an already approved work order, and a margin question. Permit real actions within that workspace, then restore its starting state through an explicit reset or expiry. Bound AI usage and keep sandbox credentials and records separate from the main production workspace. Choose the isolation design only after verifying concurrent sessions and reset behavior. | A new reviewer can sign in without admin help, complete the Command approval flow, refresh both apps, see persisted changes in Margin, and reset the sandbox. Two reviewers cannot see or alter each other's records or the main showcase data. No control is decorative or simulated. |
 | 2 | Repeatable release gate | Add CI for typechecks, builds, unit tests, and browser-level end-to-end tests against isolated database state. Cover login, authorization denial, valid and invalid AI citations, the approval boundary, duplicate booking, and forecast-versus-actual accounting. | Each pull request produces a clear pass/fail result; the core workflow can be rerun without leaving QA records in production. |

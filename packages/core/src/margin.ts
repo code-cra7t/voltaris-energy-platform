@@ -1,4 +1,4 @@
-import { query } from "./db.js";
+import { query, workspaceContext } from "./db.js";
 import { geminiJson } from "./gemini.js";
 import type {
   BacklogItem,
@@ -389,11 +389,15 @@ export async function getMarginAnalysis(input: {
       JSON.stringify(computed),
     );
   } catch (error) {
-    console.warn("Margin AI unavailable; returning computed explanation", error);
+    console.warn(JSON.stringify({ event: "ai.fallback", product: "margin", reason: "provider_or_validation",
+      traceId: workspaceContext()?.traceId, workspace: workspaceContext()?.schema,
+      errorType: error instanceof Error ? error.name : "UnknownError" }));
   }
   const validText = (value: unknown): value is string =>
     typeof value === "string" && value.length > 0 && !/[0-9€$£%]/.test(value);
   const aiExplanation = narrative && validText(narrative.explanation) ? narrative.explanation : null;
+  if (narrative && !aiExplanation) console.warn(JSON.stringify({ event: "ai.fallback", product: "margin", reason: "narrative_validation",
+    traceId: workspaceContext()?.traceId, workspace: workspaceContext()?.schema }));
   const aiLimitations = narrative && Array.isArray(narrative.limitations) &&
     narrative.limitations.every(validText) ? narrative.limitations as string[] : null;
   const grounded = aiExplanation !== null && aiLimitations !== null;

@@ -10,21 +10,22 @@ const evidence = [
 test("keeps model findings only with valid cited source IDs", () => {
   const finding = buildIncidentFinding({
     overview: "A connector fault is plausible.",
-    likelyCauses: ["Connector fault"],
-    recommendedChecks: ["Inspect the connector"],
+    claims: [
+      { kind: "cause", text: "Connector wear may explain repeat lock faults.", evidenceIds: ["[source-1]"] },
+      { kind: "check", text: "A trained technician should inspect the connector.", evidenceIds: ["source-2"] },
+    ],
     urgency: "priority",
     limitations: [],
-    evidenceIds: ["[source-1]", "invented", "source-1"],
   }, evidence);
   assert.equal(finding.generationMode, "ai_grounded");
-  assert.deepEqual(finding.evidenceIds, ["source-1"]);
+  assert.deepEqual(finding.evidenceIds, ["source-1", "source-2"]);
+  assert.deepEqual(finding.claims?.map(claim => claim.evidenceIds), [["source-1"], ["source-2"]]);
 });
 
 test("discards unsupported AI claims while allowing a conservative source review", () => {
   const finding = buildIncidentFinding({
     overview: "Replace the charger immediately.",
-    likelyCauses: ["Invented component failure"],
-    evidenceIds: ["invented"],
+    claims: [{ kind: "cause", text: "Invented component failure is certain.", evidenceIds: ["invented"] }],
   }, evidence);
   assert.equal(finding.generationMode, "source_review");
   assert.deepEqual(finding.likelyCauses, []);
@@ -34,4 +35,20 @@ test("discards unsupported AI claims while allowing a conservative source review
 
 test("uses the same labeled fallback when the model is unavailable", () => {
   assert.equal(buildIncidentFinding(null, evidence).generationMode, "source_review");
+});
+
+test("rejects a whole claim when one citation is invented", () => {
+  const finding = buildIncidentFinding({ claims: [
+    { kind: "cause", text: "A connector fault is certain from these records.", evidenceIds: ["source-1", "made-up"] },
+    { kind: "check", text: "Review the prior service visit with a qualified technician.", evidenceIds: ["source-1"] },
+  ] }, evidence);
+  assert.equal(finding.generationMode, "ai_grounded");
+  assert.equal(finding.claims?.length, 1);
+  assert.doesNotMatch(JSON.stringify(finding), /connector fault is certain/i);
+});
+
+test("insufficient evidence remains an uncertain source review", () => {
+  const finding = buildIncidentFinding({ claims: [] }, evidence);
+  assert.equal(finding.generationMode, "source_review");
+  assert.deepEqual(finding.claims, []);
 });

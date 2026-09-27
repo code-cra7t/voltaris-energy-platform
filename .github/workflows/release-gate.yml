@@ -1,0 +1,72 @@
+name: Voltaris release gate
+
+on:
+  pull_request:
+  push:
+    branches: [tori]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: voltaris
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres -d voltaris"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      CI: "true"
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/voltaris
+      SESSION_SECRET: ci-only-voltar-is-session-secret-32characters
+      SANDBOX_PASSWORD: ci-only-reviewer-password-2026
+      REVIEWER_PASSWORD: ci-only-manager-password-2026
+      PW_REVIEWER_EMAIL: reviewer-one@voltaris.example
+      PW_REVIEWER_PASSWORD: ci-only-reviewer-password-2026
+      PW_MANAGER_EMAIL: reviewer@voltaris.example
+      PW_MANAGER_PASSWORD: ci-only-manager-password-2026
+      PW_COMMAND_URL: http://127.0.0.1:3000
+      PW_MARGIN_URL: http://127.0.0.1:3001
+      NEXT_PUBLIC_COMMAND_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_MARGIN_URL: http://127.0.0.1:3001
+      PW_START_SERVERS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r typecheck
+      - run: pnpm -r test
+      - run: pnpm --filter @voltaris/core db:migrate
+      - run: pnpm --filter @voltaris/core db:seed
+        env:
+          ADMIN_EMAIL: ci-admin@voltaris.example
+          ADMIN_PASSWORD: ci-only-admin-password-2026
+      - run: pnpm --filter @voltaris/core reviewer:create
+      - run: pnpm --filter @voltaris/core sandbox:create reviewer-one@voltaris.example "Reviewer One" 1
+      - run: pnpm --filter @voltaris/core sandbox:create reviewer-two@voltaris.example "Reviewer Two" 1
+      - run: pnpm --filter @voltaris/core sandbox:verify
+        env:
+          SANDBOX_TEST_EMAIL_A: reviewer-one@voltaris.example
+          SANDBOX_TEST_EMAIL_B: reviewer-two@voltaris.example
+      - run: pnpm -r build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

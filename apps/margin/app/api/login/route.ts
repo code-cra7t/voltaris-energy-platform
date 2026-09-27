@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     response.cookies.set("voltaris_session", signStaffSession(user), { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 8 });
     return response;
   } catch (error) {
-    console.error("Margin sign-in failed", error);
+    console.error(JSON.stringify({ event: "auth.failed", product: "margin", errorType: error instanceof Error ? error.name : "UnknownError" }));
     return NextResponse.json({ error: "Sign-in is temporarily unavailable. Try again." }, { status: 500 });
   }
 }

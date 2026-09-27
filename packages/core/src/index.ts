@@ -21,3 +21,5 @@ export {
   signStaffSession,
   verifyStaffSession,
 } from "./auth.js";
+export { withWorkspace, workspaceContext } from "./db.js";
+export { resetReviewerWorkspace } from "./sandbox.js";

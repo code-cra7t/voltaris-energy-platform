@@ -1,5 +1,5 @@
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { query } from "./db.js";
+import { queryPublic, validWorkspaceSchema } from "./db.js";
 import type { StaffUser } from "./types.js";
 
 const SESSION_DURATION_SECONDS = 8 * 60 * 60;
@@ -34,14 +34,19 @@ export async function authenticateStaff(
   email: string,
   password: string,
 ): Promise<StaffUser | null> {
-  const rows = await query<{
+  const rows = await queryPublic<{
     id: string;
     email: string;
     display_name: string;
     role: StaffUser["role"];
     password_hash: string;
+    workspace_schema: string;
   }>(
-    "SELECT id::text, email, display_name, role, password_hash FROM staff_users WHERE lower(email) = lower($1) LIMIT 1",
+    `SELECT s.id::text, s.email, s.display_name, s.role, s.password_hash, s.workspace_schema
+     FROM public.staff_users s
+     LEFT JOIN public.reviewer_workspaces w ON w.owner_id = s.id
+     WHERE lower(s.email) = lower($1)
+       AND (s.workspace_schema = 'public' OR (w.active AND w.expires_at > now())) LIMIT 1`,
     [email.trim()],
   );
   const row = rows[0];
@@ -51,6 +56,7 @@ export async function authenticateStaff(
     email: row.email,
     displayName: row.display_name,
     role: row.role,
+    workspaceSchema: validWorkspaceSchema(row.workspace_schema) ? row.workspace_schema : "public",
   };
 }
 
@@ -61,6 +67,7 @@ export function signStaffSession(user: StaffUser): string {
       email: user.email,
       displayName: user.displayName,
       role: user.role,
+      workspaceSchema: user.workspaceSchema,
       exp: Math.floor(Date.now() / 1000) + SESSION_DURATION_SECONDS,
     }),
   ).toString("base64url");
@@ -105,6 +112,7 @@ export function verifyStaffSession(token: string): StaffUser | null {
       email: data.email,
       displayName: data.displayName,
       role: data.role as StaffUser["role"],
+      workspaceSchema: typeof data.workspaceSchema === "string" && validWorkspaceSchema(data.workspaceSchema) ? data.workspaceSchema : "public",
     };
   } catch {
     return null;

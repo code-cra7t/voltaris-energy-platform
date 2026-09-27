@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { verifyStaffSession } from "@voltaris/core";
+import { withWorkspace, verifyStaffSession } from "@voltaris/core";
+import { randomUUID } from "node:crypto";
+import { performance } from "node:perf_hooks";
 import type { Quarter, StaffUser } from "@voltaris/core";
 
 export async function staff(): Promise<StaffUser | null> {
@@ -8,9 +10,24 @@ export async function staff(): Promise<StaffUser | null> {
   return token ? verifyStaffSession(token) : null;
 }
 
+export async function inWorkspace<T>(user: StaffUser, operation: string, fn: () => Promise<T>): Promise<T> {
+  const traceId = randomUUID();
+  const start = performance.now();
+  try { return await withWorkspace(user.workspaceSchema, user.id, traceId, fn); }
+  catch (error) {
+    console.error(JSON.stringify({ event: "request.error", traceId, product: "margin", operation,
+      workspace: user.workspaceSchema, error: error instanceof Error ? error.name : "UnknownError" }));
+    throw error;
+  } finally {
+    console.info(JSON.stringify({ event: "request.complete", traceId, product: "margin", operation,
+      workspace: user.workspaceSchema, durationMs: Math.round(performance.now() - start) }));
+  }
+}
+
 export function unauthorized() { return NextResponse.json({ error: "Your session has expired. Sign in again." }, { status: 401 }); }
 export function failed(error: unknown) {
-  console.error("Margin request failed", error);
+  console.error(JSON.stringify({ event: "request.failed", product: "margin",
+    errorType: error instanceof Error ? error.name : "UnknownError" }));
   return NextResponse.json({ error: "The requested data is temporarily unavailable. Please try again." }, { status: 500 });
 }
 export function badRequest(error: string) { return NextResponse.json({ error }, { status: 400 }); }

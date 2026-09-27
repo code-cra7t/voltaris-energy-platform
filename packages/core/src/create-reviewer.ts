@@ -9,7 +9,7 @@ const root = resolve(process.cwd(), "../..");
 config({ path: resolve(root, ".env.local") });
 
 const email = "reviewer@voltaris.example";
-const password = randomBytes(30).toString("base64url");
+const password = process.env.REVIEWER_PASSWORD || randomBytes(30).toString("base64url");
 const pool = getPool();
 try {
   const result = await pool.query(

@@ -8,7 +8,11 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
+    "test:e2e": "playwright test",
     "db:migrate": "pnpm --filter @voltaris/core db:migrate",
     "db:seed": "pnpm --filter @voltaris/core db:seed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
   }
 }

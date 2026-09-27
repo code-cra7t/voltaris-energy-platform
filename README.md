@@ -9,11 +9,11 @@ Two connected operations products for a fictional European energy-services compa
 | **Command** | https://voltaris-energy-platform-command.vercel.app/ |
 | **Margin** | https://voltaris-energy-platform-margin.vercel.app/ |
 
-Both apps require the same Voltaris staff login. The initial administrator credentials are stored in the local, ignored `.env.local` file created for this deployment; they are deliberately absent from the repository. For a reviewer, create a separate account or share credentials through a secure channel. Start in Command with the Hannover charger incident, then open Margin's service backlog to see its approved €140 forecast cost.
+Both apps accept the same Voltaris staff credentials; each address has its own sign-in. Invited reviewers receive a private, writable workspace with an incoming fault, an already approved work order, and an explicit reset. Credentials are shared privately and never stored in the repository. Start with [the reviewer guide](docs/REVIEWER_GUIDE.md).
 
 [Watch the 90-second captioned product walkthrough](docs/voltaris-walkthrough.mp4) · [Read the case study](docs/CASE_STUDY.md)
 
-[Product upgrade plan](docs/UPGRADE_PLAN.md) — proposed next phase, led by an isolated, writable reviewer sandbox.
+[Reviewer and operator guide](docs/REVIEWER_GUIDE.md) · [Product upgrade plan](docs/UPGRADE_PLAN.md)
 
 | Command incident workflow | Margin financial intelligence |
 | --- | --- |
@@ -26,7 +26,7 @@ Both apps require the same Voltaris staff login. The initial administrator crede
 | **Command** | Report an EV charger fault, review cited maintenance evidence, prepare a qualified technician dispatch, approve it, and complete a work order. | Grounded Gemini analysis, contract response targets, availability checks, transactional booking, staff authentication, audit trail. |
 | **Margin** | Investigate regional service margin, drill into posted financial events, and see the forecast cost of approved open work. | PostgreSQL metrics, quarter comparison, keyset-paginated evidence, restricted AI explanations, actual-versus-forecast separation. |
 
-The integration uses the same Postgres schema. Approving a Command proposal creates an open work order and a forecast event visible in Margin. Completion posts an actual cost event that changes the service margin. No forecast is counted as recognized revenue or actual cost.
+The products read the same PostgreSQL data within the signed-in workspace. Each invited reviewer has an isolated schema. Approving a Command proposal creates an open work order and a forecast event visible in Margin. Completion posts an actual cost event that changes service margin. No forecast is counted as recognized revenue or actual cost.
 
 ## Architecture
 
@@ -46,7 +46,8 @@ The apps are separate Next.js projects in one pnpm workspace. `packages/core` ow
 
 ## Operational safeguards
 
-- AI findings cite exact runbook, maintenance-log, or contract IDs. Unsupported citations are rejected.
+- Each AI cause or check cites its own exact runbook, maintenance-log, or contract IDs. Unsupported claims are discarded; an uncertain source review remains available.
+- Invited reviewer records are isolated by account-owned PostgreSQL schema, with explicit reset, expiry, and a daily AI-call limit.
 - The model never emits SQL that is executed. Margin only runs fixed, parameterized queries.
 - Dispatch remains a proposal until a signed-in staff member approves it. Slot booking, work-order creation, forecast posting, and audit entries commit in one transaction.
 - Contract response risk is displayed when no qualified slot meets the deadline; the system does not claim an SLA was met.
@@ -71,10 +72,11 @@ Command runs on port 3000; Margin runs on port 3001. The first admin is created 
 - `pnpm typecheck`
 - `pnpm build`
 - `pnpm test`
+- `pnpm test:e2e` against a seeded disposable database and running builds; see [the reviewer guide](docs/REVIEWER_GUIDE.md).
 - From `packages/core`, `./node_modules/.bin/tsx src/smoke.ts` runs a **write-bearing** integration test against the configured database. It creates a QA incident and completes it. Run only on a database intended for testing.
 
-The browser-level release checklist is in [the walkthrough](docs/WALKTHROUGH.md). Architecture and decisions are in [the case study](docs/CASE_STUDY.md).
+CI runs the release gate against an isolated pgvector Postgres service. The browser-level walkthrough is in [the reviewer guide](docs/REVIEWER_GUIDE.md). Architecture and decisions are in [the case study](docs/CASE_STUDY.md).
 
 ## Scope
 
-This is a functional employer portfolio product on fictional data. It is not connected to a real utility's field devices, ERP, CRM, Gmail, or Google Calendar. Scheduling uses the app's own persisted technician availability. Real customer deployment would require tenant isolation, identity integration, data protection review, monitoring, and domain-specific safety sign-off.
+These are working internal operations products for a fictional company. They are not connected to a real utility's field devices, ERP, CRM, Gmail, or Google Calendar. Scheduling uses persisted technician availability. Real customer deployment would require enterprise identity and tenant policies, external integrations, data protection review, monitoring alerts, and domain-specific safety sign-off.

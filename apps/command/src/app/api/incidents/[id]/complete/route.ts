@@ -1,12 +1,12 @@
 import { completeWorkOrder, getIncidentDetail } from "@voltaris/core";
-import { canDispatch, errorResponse, forbidden, getStaff, unauthorized } from "@/lib/auth";
+import { canDispatch, errorResponse, forbidden, getStaff, inWorkspace, unauthorized } from "@/lib/auth";
 import { presentDetail } from "@/lib/presenter";
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   const staff = await getStaff();
   if (!staff) return unauthorized();
   if (!canDispatch(staff)) return forbidden();
-  try {
+  try { return await inWorkspace(staff, "incidents/[id]/complete", async () => {
     const body = await request.json();
     const workOrderId = String(body.workOrderId ?? "");
     const actualCostCents = Number(body.actualCostCents);
@@ -16,5 +16,5 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     if (!incident?.workOrder || incident.workOrder.id !== workOrderId) return Response.json({ error: "Work order does not belong to this incident." }, { status: 409 });
     const detail = await completeWorkOrder({ workOrderId, actor: staff.displayName, actualCostCents, completionNote });
     return Response.json(presentDetail(detail));
-  } catch (error) { return errorResponse(error); }
+  }); } catch (error) { return errorResponse(error); }
 }

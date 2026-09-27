@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMarginDashboard } from "@voltaris/core";
-import { badRequest, failed, parseQuarter, parseRegion, priorQuarters, quarterPeriod, staff, unauthorized } from "@/lib/server";
+import { badRequest, failed, parseQuarter, parseRegion, priorQuarters, quarterPeriod, staff, inWorkspace, unauthorized } from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  if (!await staff()) return unauthorized();
+  const user = await staff(); if (!user) return unauthorized();
   let region, quarter;
   try { region = parseRegion(request.nextUrl.searchParams.get("region")); quarter = parseQuarter(request.nextUrl.searchParams.get("quarter")); } catch { return badRequest("Invalid region or quarter."); }
-  try {
+  try { return await inWorkspace(user, "dashboard", async () => {
     const data = await getMarginDashboard({ region, quarter });
     const allRegions = region ? (await getMarginDashboard({ quarter })).regionBreakdown.map(r => r.region) : data.regionBreakdown.map(r => r.region);
     const currentPeriod = quarterPeriod(data.quarter);
@@ -27,5 +27,5 @@ export async function GET(request: NextRequest) {
       updatedAt: new Date().toISOString(),
       synthetic: true,
     });
-  } catch (error) { return failed(error); }
+  }); } catch (error) { return failed(error); }
 }

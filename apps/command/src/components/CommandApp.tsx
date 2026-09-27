@@ -57,7 +57,7 @@ function CitationChip({ citation, onClick }: { citation: Citation; onClick: () =
   return <button className="citation-chip" type="button" onClick={onClick}><Icon name="file" size={13}/>{citation.label}<Icon name="chevron" size={12}/></button>;
 }
 
-export function CommandApp({ staffName, canDispatch }: { staffName: string; canDispatch: boolean }) {
+export function CommandApp({ staffName, canDispatch, reviewerWorkspace, marginUrl }: { staffName: string; canDispatch: boolean; reviewerWorkspace: boolean; marginUrl: string }) {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [incidents, setIncidents] = useState<IncidentSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -139,6 +139,18 @@ export function CommandApp({ staffName, canDispatch }: { staffName: string; canD
     catch (err) { setError((err as Error).message); }
   }
 
+  async function resetWorkspace() {
+    if (!window.confirm("Restore this workspace to the shift handoff state? Your incident and booking changes here will be removed.")) return;
+    setBusy("create"); setError(null); setNotice(null);
+    try {
+      await request("/api/workspace/reset", { method: "POST" });
+      setSelectedId(null); setDetail(null); setView("queue");
+      await load();
+      setNotice("Shift workspace restored. The incoming fault and scheduled work order are ready again.");
+    } catch (err) { setError((err as Error).message); }
+    finally { setBusy(null); }
+  }
+
   function showCitation(id: string) {
     const citation = detail?.citations.find(item => item.id === id);
     if (citation) setActiveCitation(citation);
@@ -169,8 +181,9 @@ export function CommandApp({ staffName, canDispatch }: { staffName: string; canD
     </aside>
 
     <main className="main-area">
-      <header className="topbar"><button className="mobile-menu" type="button" aria-label="Open menu" onClick={() => setMobileMenu(!mobileMenu)}><Icon name="menu"/></button><div className="breadcrumbs"><span>Operations</span><Icon name="chevron" size={14}/><strong>{navigation.find(item => item.id === view)?.label}</strong></div><div className="topbar-right"><span className="env-pill"><span/> Live workspace</span><span className="topbar-divider"/><span className="avatar" title={staffName}>{staffName.split(/\s+/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span></div></header>
+      <header className="topbar"><button className="mobile-menu" type="button" aria-label="Open menu" onClick={() => setMobileMenu(!mobileMenu)}><Icon name="menu"/></button><div className="breadcrumbs"><span>Operations</span><Icon name="chevron" size={14}/><strong>{navigation.find(item => item.id === view)?.label}</strong></div><div className="topbar-right"><span className="env-pill"><span/> {reviewerWorkspace ? "Invited workspace" : "Live workspace"}</span><span className="topbar-divider"/><span className="avatar" title={staffName}>{staffName.split(/\s+/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span></div></header>
       <div className="page-content">
+        {reviewerWorkspace && <section className="handoff-card" aria-label="Shift handoff"><div><span className="section-kicker">SHIFT HANDOFF · HANNOVER</span><h2>Start with the incoming charger fault</h2><p>The connector fault at Hannover Messe Hub needs an evidence review and a dispatch decision. A temperature-warning job is already booked; its forecast is visible in Margin. Every action you take is saved in this workspace.</p><div className="handoff-actions"><button type="button" onClick={() => { const incoming = incidents.find(item => item.asset.code === "VC-HAN-001"); if (incoming) { setSelectedId(incoming.id); setView("queue"); } }}>Open incoming fault</button><a href={marginUrl} target="_blank" rel="noopener noreferrer">Open Margin backlog ↗</a><button type="button" disabled={busy !== null} onClick={() => void resetWorkspace()}>Restore shift state</button></div></div><small>Voltaris is fictional. Records are synthetic; bookings, approvals, AI calls, and financial calculations are live.</small></section>}
         <div className="page-heading"><div><div className="eyebrow"><span className="eyebrow-line"/> SERVICE INTELLIGENCE</div><h1>Command center<span className="title-period">.</span></h1><p>Investigate charger faults, review evidence, and schedule the right response.</p></div>{canDispatch && <button className="primary-button report-button" type="button" onClick={() => { setShowReport(true); setError(null); }}><Icon name="plus" size={18}/> Report incident</button>}</div>
 
         {error && <div className="alert error" role="alert"><span>{error}</span><button type="button" onClick={() => { setError(null); void load(); }}>Retry <Icon name="arrow" size={15}/></button></div>}

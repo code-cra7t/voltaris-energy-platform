@@ -5,6 +5,8 @@ import DashboardClient from "@/components/DashboardClient";
 
 export default async function Page() {
   const token = (await cookies()).get("voltaris_session")?.value;
-  if (!token || !verifyStaffSession(token)) redirect("/login");
-  return <DashboardClient />;
+  const staff = token ? verifyStaffSession(token) : null;
+  if (!staff) redirect("/login");
+  return <DashboardClient reviewerWorkspace={staff.workspaceSchema !== "public"}
+    commandUrl={process.env.NEXT_PUBLIC_COMMAND_URL || "https://voltaris-energy-platform-command.vercel.app/"} />;
 }

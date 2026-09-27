@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMarginAnalysis } from "@voltaris/core";
 import type { MarginAnalysisKind } from "@voltaris/core";
-import { badRequest, failed, parseQuarter, parseRegion, staff, unauthorized } from "@/lib/server";
+import { badRequest, failed, parseQuarter, parseRegion, staff, inWorkspace, unauthorized } from "@/lib/server";
 
 const allowed: MarginAnalysisKind[] = ["margin_change", "revenue_drivers", "cost_drivers", "backlog"];
 
@@ -15,7 +15,7 @@ function classify(question: string): MarginAnalysisKind | null {
 }
 
 export async function POST(request: NextRequest) {
-  if (!await staff()) return unauthorized();
+  const user = await staff(); if (!user) return unauthorized();
   let body: { question?: unknown; analysis?: unknown; region?: unknown; quarter?: unknown };
   try { body = await request.json(); } catch { return badRequest("Enter a question about the business."); }
   const question = typeof body.question === "string" ? body.question.trim() : "";
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   try { region = parseRegion(typeof body.region === "string" ? body.region : null); quarter = parseQuarter(typeof body.quarter === "string" ? body.quarter : null); } catch { return badRequest("Invalid region or quarter."); }
   const analysis = typeof body.analysis === "string" && allowed.includes(body.analysis as MarginAnalysisKind) ? body.analysis as MarginAnalysisKind : classify(question);
   if (!analysis) return NextResponse.json({ error: "I can answer questions about margin changes, revenue drivers, direct costs, and the open service backlog. Try one of the suggested questions." }, { status: 422 });
-  try {
+  try { return await inWorkspace(user, "ask", async () => {
     const result = await getMarginAnalysis({ region, quarter, analysis });
     const evidence = analysis === "backlog" ? [{ label: "Open backlog", value: result.headline }] : [
       { label: "Recognized revenue", value: new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format(result.metrics.recognizedRevenueCents / 100) },
@@ -32,5 +32,5 @@ export async function POST(request: NextRequest) {
       { label: "Actual service margin", value: new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format(result.metrics.marginCents / 100) },
     ];
     return NextResponse.json({ question, analysis, answer: result.explanation, evidence, caveat: result.limitations.join(" "), sourceEventIds: result.evidence.map(e => e.id), generatedBy: result.generatedBy });
-  } catch (error) { return failed(error); }
+  }); } catch (error) { return failed(error); }
 }
