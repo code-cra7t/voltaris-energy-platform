@@ -1,4 +1,5 @@
 import { geminiJson } from "./gemini.js";
+import { buildIncidentFinding } from "./command-finding.js";
 import { query, transaction } from "./db.js";
 import type {
   AgentAction,
@@ -290,7 +291,9 @@ export async function analyzeIncident(id: string, actor: string): Promise<Incide
   const evidenceList = incident.evidence.map((item) =>
     `[${item.id}] ${item.title} (${item.sourceType}): ${item.excerpt}`,
   ).join("\n");
-  const result = await geminiJson<Partial<IncidentFinding>>(`
+  let result: Partial<IncidentFinding> | null = null;
+  try {
+    result = await geminiJson<Partial<IncidentFinding>>(`
 You are an EV charging maintenance operations assistant. Do not claim a definitive electrical diagnosis or recommend unsafe physical intervention. Use only the supplied evidence. Return JSON with keys overview (string), likelyCauses (array of short strings), recommendedChecks (array of safe checks for a trained technician), urgency (routine|priority|urgent), limitations (array of strings), evidenceIds (array of exact IDs cited below). If evidence is insufficient, say so. Do not invent IDs.
 
 Incident: ${incident.description}
@@ -299,21 +302,10 @@ Site: ${incident.siteName}, ${incident.region}
 Contract: ${incident.contract ? `${incident.contract.serviceLevel}, ${incident.contract.responseHours} hour response target` : "none recorded"}
 Evidence:\n${evidenceList}
   `.trim());
-  const allowedIds = new Set(incident.evidence.map((item) => item.id));
-  const finding: IncidentFinding = {
-    overview: String(result.overview || "Evidence review completed"),
-    likelyCauses: Array.isArray(result.likelyCauses) ? result.likelyCauses.map(String).slice(0, 5) : [],
-    recommendedChecks: Array.isArray(result.recommendedChecks) ? result.recommendedChecks.map(String).slice(0, 5) : [],
-    urgency: ["routine", "priority", "urgent"].includes(String(result.urgency))
-      ? result.urgency as IncidentFinding["urgency"] : "priority",
-    limitations: Array.isArray(result.limitations) ? result.limitations.map(String).slice(0, 5) : [],
-    evidenceIds: Array.isArray(result.evidenceIds)
-      ? result.evidenceIds.map(String).filter((item) => allowedIds.has(item)) : [],
-    generatedAt: new Date().toISOString(),
-  };
-  if (!finding.evidenceIds.length) {
-    throw new Error("AI analysis did not cite any valid source");
+  } catch (error) {
+    console.warn("Command AI assessment unavailable; using cited source review", error);
   }
+  const finding = buildIncidentFinding(result, incident.evidence);
   await transaction(async (client) => {
     await client.query(
       "UPDATE incidents SET finding=$2::jsonb,status='analyzed',updated_at=now() WHERE id=$1",
@@ -321,7 +313,9 @@ Evidence:\n${evidenceList}
     );
     await client.query(
       "INSERT INTO agent_actions(incident_id,action,outcome,detail,actor) VALUES($1,'evidence_analyzed','success',$2,$3)",
-      [id, `Grounded finding saved with ${finding.evidenceIds.length} cited source(s)`, actor],
+      [id, finding.generationMode === "source_review"
+        ? `Conservative source review saved with ${finding.evidenceIds.length} records; unsupported AI claims discarded`
+        : `Grounded AI finding saved with ${finding.evidenceIds.length} cited source(s)`, actor],
     );
   });
   return (await getIncidentDetail(id))!;

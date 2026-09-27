@@ -71,6 +71,7 @@ export function presentDetail(incident: CoreIncidentDetail): IncidentDetail {
       ],
       safetyNote: incident.finding.limitations.length ? incident.finding.limitations.join(" ") : "Advisory assessment only. A qualified technician must verify the fault before any physical work.",
       generatedAt: incident.finding.generatedAt,
+      model: incident.finding.generationMode === "source_review" ? "Conservative source review" : "Gemini assessment",
     } : null,
     proposal: incident.proposal ? {
       id: incident.proposal.id,

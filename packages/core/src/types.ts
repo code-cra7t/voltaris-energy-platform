@@ -59,6 +59,7 @@ export interface IncidentFinding {
   limitations: string[];
   evidenceIds: string[];
   generatedAt: IsoDateTime;
+  generationMode?: "ai_grounded" | "source_review";
 }
 
 export interface TechnicianRef {

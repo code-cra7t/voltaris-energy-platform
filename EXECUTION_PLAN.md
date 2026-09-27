@@ -51,3 +51,15 @@ Both products share one PostgreSQL data model. An approved Command work order up
 - Neon: separate Voltaris Energy project created in Frankfurt; schema and fictional records loaded. Both deployed apps read the same database.
 - GitHub and Vercel: source published at https://github.com/code-cra7t/voltaris-energy-platform; both apps deployed from branch `tori` to the production URLs in `README.md`.
 - Gmail and Google Calendar: connected to Codex, but not automatically authorized for the deployed products. The first release uses an internal schedule and in-app confirmation.
+
+## Employer release hardening — 27 September 2026
+
+The public `code-cra7t/voltaris-energy-platform` repository on branch `tori` contains the two products, shared core, seed data, architecture notes, case study, screenshots, and captioned walkthrough. Both production URLs have been reported `READY` and returned HTTP 200. The user reported one Command runtime error in the preceding 24 hours: Gemini returned no valid evidence ID for incident analysis. Margin had no reported errors in that window. The code review confirmed that Command intentionally rejected ungrounded AI output.
+
+| Task | Acceptance criterion | Status |
+| --- | --- | --- |
+| Citation recovery | Unsupported AI claims are discarded; Command saves a clearly labeled, cited, conservative source review so the workflow continues. | Implemented locally; production QA pending |
+| Reviewer access | A dedicated non-admin account can read both products, while Command mutation APIs reject it; credentials stay out of Git. | Account created; production QA pending |
+| Employer walkthrough QA | Execute the documented 90-second story on both production URLs, check approval and Margin propagation, and record findings. | Pending |
+
+Do not add product features during this pass. A fictional company and synthetic records remain explicitly labeled in the product and portfolio material.

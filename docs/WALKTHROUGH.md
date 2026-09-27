@@ -2,6 +2,10 @@
 
 The [90-second captioned walkthrough](voltaris-walkthrough.mp4) uses screenshots captured from the deployed products. For an interactive walkthrough, follow the sequence below with a Voltaris staff login.
 
+## Reviewer access
+
+The dedicated `reviewer@voltaris.example` account has the `manager` role. It can inspect Command incidents, citations, work orders, and audit activity, and can explore Margin dashboards and evidence. Command creation, analysis, dispatch, approval, and completion controls are hidden for this role and denied by the API. Share its generated password privately with individual reviewers; it is saved only in the ignored local `.env.reviewer.local` file, never in Git. The live approval sequence requires a separate dispatcher/admin session or the captioned walkthrough.
+
 ## 90-second walkthrough script
 
 Open [Command](https://voltaris-energy-platform-command.vercel.app/) and [Margin](https://voltaris-energy-platform-margin.vercel.app/) in separate tabs. Both require the Voltaris staff login. For a clean approval sequence, report a new fictional incident: the seeded Hannover incident has already been approved and is useful for showing the connected backlog.
