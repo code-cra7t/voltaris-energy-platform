@@ -13,6 +13,8 @@ Both apps require the same Voltaris staff login. The initial administrator crede
 
 [Watch the 90-second captioned product walkthrough](docs/voltaris-walkthrough.mp4) · [Read the case study](docs/CASE_STUDY.md)
 
+[Product upgrade plan](docs/UPGRADE_PLAN.md) — proposed next phase, led by an isolated, writable reviewer sandbox.
+
 | Command incident workflow | Margin financial intelligence |
 | --- | --- |
 | ![Command incident and operations queue](docs/media/01-command-incident.jpg) | ![Margin dashboard with posted financial metrics](docs/media/04-margin-overview.jpg) |

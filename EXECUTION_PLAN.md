@@ -63,3 +63,5 @@ The public `code-cra7t/voltaris-energy-platform` repository on branch `tori` con
 | Employer walkthrough QA | Execute the documented 90-second story on both production URLs, check approval and Margin propagation, and record findings. | Passed; see `docs/RELEASE_QA_2026-09-27.md` |
 
 Do not add product features during this pass. A fictional company and synthetic records remain explicitly labeled in the product and portfolio material.
+
+The proposed next phase is documented in [the product upgrade plan](docs/UPGRADE_PLAN.md). Its first priority is a writable, isolated reviewer sandbox so an employer can complete the real Command-to-Margin workflow independently.
