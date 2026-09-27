@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="248" height="52" viewBox="0 0 248 52" fill="none">
-  <path d="M7 34 22 6l-3.6 18h14L17 47l3.9-17H7Z" fill="#E87254"/>
-  <circle cx="39" cy="11" r="2.5" fill="#BBE5D7"/>
-  <text x="52" y="34" fill="#F5F2EC" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="31" letter-spacing="-1.5">voltaris</text>
-  <circle cx="180" cy="34" r="2.5" fill="#E87254"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="285" height="52" viewBox="0 0 285 52" fill="none">
+  <defs><linearGradient id="voltaris" x1="3" y1="4" x2="44" y2="45" gradientUnits="userSpaceOnUse"><stop stop-color="#89EFFF"/><stop offset=".55" stop-color="#25B8E6"/><stop offset="1" stop-color="#1677C9"/></linearGradient></defs>
+  <path d="M4 7h10.5L24 27.5 33.5 7H44L27 43h-6L4 7Z" fill="url(#voltaris)"/>
+  <text x="57" y="35" fill="#F4FAFC" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="26" letter-spacing="4">VOLTARIS</text>
 </svg>

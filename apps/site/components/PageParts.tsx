@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 
-export function PageHero({number, eyebrow, title, accent, description, children}: {number: string; eyebrow: string; title: string; accent: string; description: string; children?: React.ReactNode}) {
-  return <section className="page-hero section-dark"><div className="page-hero-grid" aria-hidden="true"/><div className="container page-hero-inner"><div className="section-label light-label"><span>{number}</span> {eyebrow}</div><h1>{title}<br/><em>{accent}</em><span className="orange-period">.</span></h1><div className="page-hero-foot"><p>{description}</p>{children}</div></div></section>;
+export function PageHero({number, eyebrow, title, accent, description, children, visual}: {number: string; eyebrow: string; title: string; accent: string; description: string; children?: React.ReactNode; visual?: React.ReactNode}) {
+  return <section className={`page-hero section-dark${visual ? " has-visual" : ""}`}><div className="page-hero-grid" aria-hidden="true"/><div className="container page-hero-inner"><div className="page-hero-copy"><div className="section-label light-label"><span>{number}</span> {eyebrow}</div><h1>{title}<br/><em>{accent}</em><span className="orange-period">.</span></h1><div className="page-hero-foot"><p>{description}</p>{children}</div></div>{visual && <div className="page-hero-visual">{visual}</div>}</div></section>;
 }
 
 export function Kicker({number, children, light = false}: {number: string; children: React.ReactNode; light?: boolean}) { return <div className={`section-label ${light ? "light-label" : ""}`}><span>{number}</span> {children}</div>; }

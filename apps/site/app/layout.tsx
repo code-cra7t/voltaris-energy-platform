@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SiteFooter, SiteHeader } from "@/components/SiteShell";
 import "./globals.css";
+import "./visual-refresh.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://voltaris-energy-platform-site.vercel.app"),
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: "Voltaris Energy", title: "Run the response. Understand the consequence.", description: "A connected operational platform for a fictional European energy-services company.", images: [{url: "/media/01-command-incident.jpg", width: 1280, height: 720, alt: "Voltaris Command incident workflow"}] },
 };
 
-export const viewport: Viewport = { themeColor: "#14232c", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#061722", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return <html lang="en"><body id="top"><SiteHeader/><main>{children}</main><SiteFooter/></body></html>;

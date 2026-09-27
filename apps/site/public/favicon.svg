@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="16" fill="#14232C"/>
-  <path d="M11 40.5 30 8l-5 21h17L23 56l5-20H11Z" fill="#E87254"/>
-  <path d="M30 8 25 29h17L23 56" stroke="#FFE8DB" stroke-width="2" stroke-linejoin="round"/>
-  <circle cx="48" cy="14" r="3" fill="#BBE5D7"/>
+  <defs><linearGradient id="voltaris" x1="5" y1="10" x2="56" y2="55" gradientUnits="userSpaceOnUse"><stop stop-color="#89EFFF"/><stop offset=".55" stop-color="#25B8E6"/><stop offset="1" stop-color="#1677C9"/></linearGradient></defs>
+  <rect width="64" height="64" rx="14" fill="#061722"/>
+  <path d="M6 12h13.5L32 38.5 44.5 12H58L36 54h-8L6 12Z" fill="url(#voltaris)"/>
+  <path d="M20 12h6.5L34 28l-2 5.5L20 12Z" fill="#D7FAFF" opacity=".9"/>
 </svg>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, CircleDot, Database, MoveRight, ShieldCheck } from "lucide-react";
-import { NetworkVisual } from "@/components/NetworkVisual";
 import { Reveal } from "@/components/Reveal";
 import { StoryFlow } from "@/components/StoryFlow";
 import { WalkthroughVideo } from "@/components/WalkthroughVideo";
@@ -8,16 +7,18 @@ import { ConnectionBridge } from "@/components/ConnectionBridge";
 
 export default function Home() {
   return <>
-    <section className="hero section-dark">
-      <div className="hero-glow" aria-hidden="true"/>
+    <section className="hero photo-hero section-dark">
+      <div className="hero-image" aria-hidden="true"/><div className="hero-photo-shade" aria-hidden="true"/>
       <div className="container hero-content">
-        <div className="eyebrow hero-eyebrow"><span className="eyebrow-line"/> CONNECTED ENERGY OPERATIONS <span className="eyebrow-index">01 — 06</span></div>
-        <h1>Run the response.<br/><em>Understand</em> the<br/>consequence<span className="orange-period">.</span></h1>
-        <div className="hero-bottom"><p>From a fault in the field to a decision in the control room to its effect on service margin. One connected operational story, built as working software.</p><div className="hero-actions"><Link className="button button-primary" href="/platform">Explore the platform <ArrowUpRight size={18}/></Link><Link className="text-link light" href="/reviewer">Launch reviewer workspace <ArrowRight size={17}/></Link></div></div>
-        <div className="hero-signal"><span><span className="signal-dot"/> SIMULATED NETWORK</span><span>HANNOVER, GERMANY</span><span>SCROLL TO EXPLORE <ArrowDown size={13}/></span></div>
+        <div className="hero-metrics" aria-label="Simulated network context"><div><strong>07</strong><span>Site nodes<br/>(simulated)</span></div><div><strong>01</strong><span>Service exception<br/>(simulated)</span></div><div><strong>02</strong><span>Connected<br/>products</span></div></div>
+        <div className="hero-main"><div className="eyebrow hero-eyebrow"><span className="eyebrow-line"/> OPERATIONS INTELLIGENCE FOR ENERGY SYSTEMS</div>
+          <h1>Run the response.<br/>Understand the consequence<span className="orange-period">.</span></h1>
+          <p>From an incident in the field to a decision in the control room to its effect on service margin. One connected, working system.</p>
+          <div className="hero-actions"><Link className="button button-light" href="/platform">Explore Voltaris <ArrowUpRight size={18}/></Link><Link className="button button-outline-light" href="/reviewer">Enter operations <ArrowRight size={17}/></Link></div>
+        </div>
+        <div className="hero-incident"><div><span className="signal-dot"/> HANNOVER / VC-HAN-001</div><strong>Connector fault reported</strong><span>Evidence review required</span></div>
+        <div className="hero-signal"><span>VOLTARIS ENERGY · SYNTHETIC OPERATIONS</span><span>SCROLL TO EXPLORE <ArrowDown size={13}/></span></div>
       </div>
-      <div className="container hero-network"><NetworkVisual/></div>
-      <div className="hero-rail" aria-hidden="true">VOLTARIS / ENERGY SYSTEMS / 2026</div>
     </section>
 
     <section className="section-paper statement-section">
@@ -43,13 +44,15 @@ export default function Home() {
 
     <section className="film-section"><WalkthroughVideo/><div className="film-shade"/><div className="container film-content"><Reveal><div className="section-label light-label"><span>04</span> SEE IT IN MOTION</div><h2>From signal<br/>to <em>service.</em></h2><p>Watch the complete path through Command and Margin, or enter the products and make the decision yourself.</p><div className="film-actions"><a href="/media/walkthrough.mp4" target="_blank" rel="noreferrer" className="button button-light">Watch the 90-second walkthrough <ArrowUpRight size={18}/></a><Link href="/reviewer" className="text-link light">Enter the workspace <MoveRight size={18}/></Link></div></Reveal></div><div className="film-caption">CAPTIONED PRODUCT WALKTHROUGH · SYNTHETIC OPERATIONAL RECORDS</div></section>
 
-    <section className="principles-section section-paper"><div className="container"><Reveal><div className="section-label"><span>05</span> ENGINEERED FOR THE REAL DECISIONS</div><h2 className="principles-title">Trust is a system property<span className="orange-period">.</span></h2></Reveal><div className="principles-grid">
+    <section className="company-section"><div className="company-photo" aria-hidden="true"/><div className="company-shade"/><div className="container company-content"><Reveal><div className="section-label light-label"><span>05</span> THE COMPANY BEHIND THE SYSTEM</div><h2>A fictional company.<br/>A <em>working product.</em></h2><p>Voltaris is a deliberately constructed European energy-services environment. Its sites and records are synthetic; the workflows, decisions, and software you can explore are real.</p><Link href="/about" className="button button-light">About Voltaris <ArrowUpRight size={18}/></Link></Reveal></div></section>
+
+    <section className="principles-section section-paper"><div className="container"><Reveal><div className="section-label"><span>06</span> ENGINEERED FOR THE REAL DECISIONS</div><h2 className="principles-title">Trust is a system property<span className="orange-period">.</span></h2></Reveal><div className="principles-grid">
       <Reveal><div className="principle"><div className="principle-icon"><ShieldCheck/></div><span>01 / CONTROL</span><h3>People approve actions.</h3><p>AI proposes. A signed-in staff member decides. Dispatch, booking, and audit entries commit together.</p></div></Reveal>
       <Reveal delay={80}><div className="principle"><div className="principle-icon"><Check/></div><span>02 / EVIDENCE</span><h3>Claims carry sources.</h3><p>Command validates cited records. Margin answers from computed figures and linked evidence, without model-written executable SQL.</p></div></Reveal>
       <Reveal delay={160}><div className="principle"><div className="principle-icon"><Database/></div><span>03 / ACCOUNTING</span><h3>Forecast is not actual.</h3><p>An approved job enters backlog; completed work posts actual costs. The difference remains visible throughout.</p></div></Reveal>
       </div><Reveal><Link href="/architecture" className="large-inline-link">Explore the architecture <ArrowUpRight size={22}/></Link></Reveal></div></section>
 
-    <section className="final-cta section-dark"><div className="container final-cta-inner"><Reveal><div className="section-label light-label"><span>06</span> STEP INSIDE</div><h2>See the system.<br/><em>Make the call.</em></h2><p>Use a private reviewer workspace to investigate the incoming fault, approve a service response, and trace its cost across both products.</p><Link href="/reviewer" className="button button-primary">Launch reviewer workspace <ArrowUpRight size={19}/></Link></Reveal><div className="final-cta-mark" aria-hidden="true">V<span>/</span></div></div></section>
+    <section className="final-cta section-dark"><div className="container final-cta-inner"><Reveal><div className="section-label light-label"><span>07</span> STEP INSIDE</div><h2>See the system.<br/><em>Make the call.</em></h2><p>Use a private reviewer workspace to investigate the incoming fault, approve a service response, and trace its cost across both products.</p><Link href="/reviewer" className="button button-primary">Launch reviewer workspace <ArrowUpRight size={19}/></Link></Reveal><div className="final-cta-mark" aria-hidden="true">V<span>/</span></div></div></section>
     <div className="disclosure-bar">Voltaris Energy is a fictional European energy-services environment built around working software and synthetic operational records. Network figures and incidents shown here are simulated context.</div>
   </>;
 }

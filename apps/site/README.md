@@ -8,14 +8,15 @@ At the repository root, run `pnpm install` then `pnpm dev:site`. Open `http://lo
 
 ## Pages
 
-- `/` — cinematic incident-to-margin story, interactive simulated network, live product screenshots, captioned video background, and reviewer entry.
+- `/` — cinematic incident-to-margin story, original EV infrastructure imagery, real product screenshots, captioned video background, and reviewer entry.
 - `/platform` — company and platform model.
 - `/command` and `/margin` — product workflows with real application captures.
 - `/architecture` — service boundaries, shared core, persistence, and approval transaction.
 - `/case-study` — problem, design, verifiable outcome, and links to the repository.
+- `/about` — fictional company context, working software scope, and image disclosure.
 - `/reviewer` — clear sign-in and shift instructions with direct live product links.
 
-The homepage network is explicitly simulated. The video, stills, and fictional company disclosure are local static assets. No staff login is published on the site.
+The homepage network is explicitly simulated. The site uses original AI-generated illustrative EV infrastructure images, real captures from the working products, and an existing captioned product walkthrough. Image and fictional company disclosures are visible in the experience. No staff login is published on the site.
 
 ## Deploy
 
